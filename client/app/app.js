@@ -6,8 +6,10 @@ angular.module('meanshopApp', [
   'ngSanitize',
   'btford.socket-io',
   'ui.router',
-  'ui.bootstrap'
-  'ngFileUpload'
+  'ui.bootstrap',
+  'ngFileUpload',
+  'ngcart',
+  'braintree-angular'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -44,16 +46,16 @@ angular.module('meanshopApp', [
     };
   })
 
-  .run(function($rootScope, $state, Auth) {
-    // Redirect to login if route requires auth and the user is not logged in
-    $rootScope.$on('$stateChangeStart', function(event, next) {
-      if (next.authenticate) {
-        Auth.isLoggedIn(function(loggedIn) {
-          if (!loggedIn) {
-            event.preventDefault();
-            $state.go('login');
-          }
-        });
-      }
-    });
+.run(function($rootScope, $state, Auth) {
+  // Redirect to login if route requires auth and the user is not logged in
+  $rootScope.$on('$stateChangeStart', function(event, next) {
+    if (next.authenticate) {
+      Auth.isLoggedIn(function(loggedIn) {
+        if (!loggedIn) {
+          event.preventDefault();
+          $state.go('login');
+        }
+      });
+    }
   });
+});

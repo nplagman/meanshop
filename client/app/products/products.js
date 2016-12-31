@@ -16,7 +16,7 @@ angular.module('meanshopApp')
       })
 
       .state('viewProduct', {
-        url: '/products/:id',
+        url: '/products/:id/view',
         templateUrl: 'app/products/templates/product-view.html',
         controller: 'ProductViewCtrl'
       })
@@ -25,5 +25,17 @@ angular.module('meanshopApp')
         url: '/products/:id/edit',
         templateUrl: 'app/products/templates/product-edit.html',
         controller: 'ProductEditCtrl'
+      })
+
+      .state('checkout', {
+        url: '/checkout',
+        templateUrl: 'app/products/templates/products-checkout.html',
+        controller: 'ProductCheckoutCtrl'
+      })
+
+      .state('productCatalog', {
+        url: '/products/:slug/catalog',
+        templateUrl: 'app/products/templates/product-list.html',
+        controller: 'ProductCatalogCtrl'
       });
   });

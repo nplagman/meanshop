@@ -1,13 +1,29 @@
 'use strict';
 
-var errorHandler;
+var errorHandler, uploadHander;
 
 angular.module('meanshopApp')
-  .controller('ProductsCtrl', function ($scope, Products) {
-    $scope.products = Products.query();
+
+  .controller('ProductsCtrl', function ($scope, Product) {
+    $scope.products = Product.query();
+
+    $scope.$on('search:term', function (event, data) {
+      if(data.length) {
+        $scope.products = Product.search({id: data});
+        $scope.query = data;
+      } else {
+        $scope.products = Product.query();
+        $scope.query = '';
+      }
+    });
   })
 
-  .controller('ProductViewCtrl', function ($scope, $state, $stateParams, Products) {
+  .controller('ProductCatalogCtrl', function ($scope, $stateParams, Product) {
+    $scope.products = Product.catalog({id: $stateParams.slug});
+    $scope.query = $stateParams.slug;
+  })
+
+  .controller('ProductViewCtrl', function ($scope, $state, $stateParams, Product) {
     $scope.product = Product.get({id: $stateParams.id});
     $scope.deleteProduct = function(){
       Product.delete({id: $scope.product._id}, function success(/* value, responseHeaders */) {
@@ -25,7 +41,7 @@ angular.module('meanshopApp')
     };
   })
 
-.controller('ProductEditCtrl', function ($scope, $state, $stateParams, Product, Upload, $timeout) {
+  .controller('ProductEditCtrl', function ($scope, $state, $stateParams, Product, Upload, $timeout) {
     $scope.product = Product.get({id: $stateParams.id});
     $scope.editProduct = function(){
       Product.update({id: $scope.product._id}, $scope.product, function success(value /*, responseHeaders*/){
@@ -34,6 +50,27 @@ angular.module('meanshopApp')
     };
 
     $scope.upload = uploadHander($scope, Upload, $timeout);
+  })
+
+  .constant('clientTokenPath', '/api/braintree/client_token')
+
+  .controller('ProductCheckoutCtrl',
+    function($scope, $http, $state, ngCart){
+    $scope.errors = '';
+
+    $scope.paymentOptions = {
+      onPaymentMethodReceived: function(payload) {
+        angular.merge(payload, ngCart.toObject());
+        payload.total = payload.totalCost;
+        $http.post('/api/orders', payload)
+        .then(function success () {
+          ngCart.empty(true);
+          $state.go('products');
+        }, function error (res) {
+          $scope.errors = res;
+        });
+      }
+    };
   });
 
 errorHandler = function ($scope){
@@ -67,3 +104,4 @@ uploadHander = function ($scope, Upload, $timeout) {
       });
     }
   };
+};
