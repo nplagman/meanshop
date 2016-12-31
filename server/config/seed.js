@@ -8,35 +8,30 @@
 
 var User = require('../api/user/user.model');
 
-Thing.find({}).removeAsync()
+var Product = require('../api/product/product.model');
+Product.find({}).removeAsync()
   .then(function() {
-    Thing.create({
-      name: 'Development Tools',
-      info: 'Integration with popular tools such as Bower, Grunt, Karma, ' +
-             'Mocha, JSHint, Node Inspector, Livereload, Protractor, Jade, ' +
-             'Stylus, Sass, CoffeeScript, and Less.'
+    Product.createAsync({
+      title: 'MEAN eCommerce Book',
+      imageUrl: '/assets/uploads/meanbook.jpg',
+      price: 25,
+      stock: 250,
+      description: 'Build a powerful e-commerce...'
     }, {
-      name: 'Server and Client integration',
-      info: 'Built with a powerful and fun stack: MongoDB, Express, ' +
-             'AngularJS, and Node.'
+      title: 'tshirt',
+      imageUrl: '/assets/uploads/meantshirt.jpg',
+      price: 15,
+      stock: 100,
+      description: 'tshirt with the MEAN logo'
     }, {
-      name: 'Smart Build System',
-      info: 'Build system ignores `spec` files, allowing you to keep ' +
-             'tests alongside code. Automatic injection of scripts and ' +
-             'styles into your index.html'
-    }, {
-      name: 'Modular Structure',
-      info: 'Best practice client and server structures allow for more ' +
-             'code reusability and maximum scalability'
-    }, {
-      name: 'Optimized Build',
-      info: 'Build process packs up your templates as a single JavaScript ' +
-             'payload, minifies your scripts/css/images, and rewrites asset ' +
-             'names for caching.'
-    }, {
-      name: 'Deployment Ready',
-      info: 'Easily deploy your app to Heroku or Openshift with the heroku ' +
-             'and openshift subgenerators'
+      title: 'coffee mug',
+      imageUrl: '/assets/uploads/meanmug.jpg',
+      price: 8,
+      stock: 50,
+      description: 'Convert coffee into MEAN code'
+    })
+    .then(function() {
+      console.log('finished populating products');
     });
   });
 
