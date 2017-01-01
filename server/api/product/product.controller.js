@@ -12,10 +12,12 @@
 var _ = require('lodash');
 var Product = require('./product.model');
 var path = require('path');
+var Catalog = require('../catalog/catalog.model');
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.error(err, statusCode);
     res.status(statusCode).send(err);
   };
 }
@@ -60,6 +62,24 @@ function removeEntity(res) {
   };
 }
 
+function saveFile(res, file) {
+  return function(entity){
+    var newPath = '/assets/uploads/' + path.basename(file.path);
+    entity.imageUrl = newPath;
+    return entity.saveAsync().spread(function(updated) {
+      return updated;
+    });
+  }
+}
+
+function productsInCategory(catalog) {
+  var catalog_ids = [catalog._id].concat(catalog.children);
+  return Product
+    .find({'categories': { $in: catalog_ids } })
+    .populate('categories')
+    .exec();
+}
+
 // Gets a list of Products
 exports.index = function(req, res) {
   Product.findAsync()
@@ -102,23 +122,12 @@ exports.destroy = function(req, res) {
     .catch(handleError(res));
 };
 
-function saveFile(res, file) {
-  return function(entity){
-    var newPath = '/assets/uploads/' + path.basename(file.path);
-    entity.imageUrl = newPath;
-    return entity.saveAsync().spread(function(updated) {
-      console.log(updated);
-      return updated;
-    });
-  }
-} 
-
 // Uploads a new Product's image in the DB
 exports.upload = function(req, res) {
   var file = req.files.file;
   if(!file){
     return handleError(res)('File not provided');
-  };
+  }
 
   Product.findByIdAsync(req.params.id)
     .then(handleEntityNotFound(res))
@@ -126,3 +135,22 @@ exports.upload = function(req, res) {
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
+
+exports.catalog = function(req, res) {
+  Catalog
+    .findOne({ slug: req.params.slug })
+    .execAsync()
+    .then(productsInCategory)
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+};
+
+exports.search = function(req, res) {
+  Product
+    .find({ $text: { $search: req.params.term }})
+    .populate('categories')
+    .execAsync()
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+};
+
