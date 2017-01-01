@@ -17,7 +17,7 @@ GEM
       net-ssh (>= 2.8.0)
 
 PLATFORMS
-  ruby 
+  ruby (2.2.6)
 
 DEPENDENCIES
   capistrano (~> 3.4.0)
