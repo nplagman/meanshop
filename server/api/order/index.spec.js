@@ -31,15 +31,15 @@ var orderIndex = proxyquire('./index.js', {
 describe('Order API Router:', function() {
 
   it('should return an express router instance', function() {
-    orderIndex.should.equal(routerStub);
+    expect(orderIndex).to.equal(routerStub);
   });
 
   describe('GET /api/orders', function() {
 
     it('should route to order.controller.index', function() {
-      routerStub.get
-                .withArgs('/', 'orderCtrl.index')
-                .should.have.been.calledOnce;
+      expect(routerStub.get
+        .withArgs('/', 'orderCtrl.index')
+        ).to.have.been.calledOnce;
     });
 
   });
@@ -47,9 +47,9 @@ describe('Order API Router:', function() {
   describe('GET /api/orders/:id', function() {
 
     it('should route to order.controller.show', function() {
-      routerStub.get
-                .withArgs('/:id', 'orderCtrl.show')
-                .should.have.been.calledOnce;
+      expect(routerStub.get
+        .withArgs('/:id', 'orderCtrl.show')
+        ).to.have.been.calledOnce;
     });
 
   });
@@ -57,9 +57,9 @@ describe('Order API Router:', function() {
   describe('POST /api/orders', function() {
 
     it('should route to order.controller.create', function() {
-      routerStub.post
-                .withArgs('/', 'orderCtrl.create')
-                .should.have.been.calledOnce;
+      expect(routerStub.post
+        .withArgs('/', 'orderCtrl.create')
+        ).to.have.been.calledOnce;
     });
 
   });
@@ -67,9 +67,9 @@ describe('Order API Router:', function() {
   describe('PUT /api/orders/:id', function() {
 
     it('should route to order.controller.update', function() {
-      routerStub.put
-                .withArgs('/:id', 'orderCtrl.update')
-                .should.have.been.calledOnce;
+      expect(routerStub.put
+        .withArgs('/:id', 'orderCtrl.update')
+        ).to.have.been.calledOnce;
     });
 
   });
@@ -77,9 +77,9 @@ describe('Order API Router:', function() {
   describe('PATCH /api/orders/:id', function() {
 
     it('should route to order.controller.update', function() {
-      routerStub.patch
-                .withArgs('/:id', 'orderCtrl.update')
-                .should.have.been.calledOnce;
+      expect(routerStub.patch
+        .withArgs('/:id', 'orderCtrl.update')
+        ).to.have.been.calledOnce;
     });
 
   });
@@ -87,9 +87,9 @@ describe('Order API Router:', function() {
   describe('DELETE /api/orders/:id', function() {
 
     it('should route to order.controller.destroy', function() {
-      routerStub.delete
-                .withArgs('/:id', 'orderCtrl.destroy')
-                .should.have.been.calledOnce;
+      expect(routerStub.delete
+        .withArgs('/:id', 'orderCtrl.destroy')
+        ).to.have.been.calledOnce;
     });
 
   });
